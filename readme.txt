@@ -1,6 +1,5 @@
 === IT Hub Assistant ===
-Contributors: National FFA Organization 
-Donate link: https://ffa.givingfuel.com/ffadonate
+Contributors: National FFA Organization
 Tags: content, search
 Requires at least: 4.0
 Tested up to: 4.9.5
@@ -34,5 +33,4 @@ Extensive help is provided by Kensley O. Lewis, who is the UI developer for the 
 
 = Translations =
 
-* Language Packs: None at the moment 
-
+* Language Packs: None at the moment
