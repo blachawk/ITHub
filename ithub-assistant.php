@@ -28,9 +28,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 */
 
-//I NEED TO GET ON GIT TO UPLOAD MY PLUGIN AND PUSH IT TO OTHER PLACES THAT NEED IT (i.e. my development servers)
+//WP TOOLS TO HELP SUPPORT GIT
 //https://github.com/afragen/github-updater
-//https://youtu.be/4kUTyNgsqUA
 
 
 //CONSTANTS
