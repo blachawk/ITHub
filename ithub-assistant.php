@@ -3,7 +3,7 @@
 /*
 Plugin Name: ITHub Assistant
 Plugin URI: ithub.ffa.org
-Description: Custom PHP and JavaScript support for the ITHub web site
+Description: A WP Plugin that provides PHP and JavaScript support for IT Hub
 Version: 1.0
 Author: National FFA Organization
 Author URI: https://www.ffa.org
