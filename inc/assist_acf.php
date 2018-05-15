@@ -1,6 +1,6 @@
 <?php	
 /**
- * MANAGE ALL AFC LOGIC HERE.  DYNAMICALLY APPLY ACF CODE TO THE_CONTENT, FOR ANY GIVEN PAGE. 
+ * MANAGE ALL AFC OBJECT LOGIC FOR ANY GIVEN PAGE.
  */
 	//NFFA - TAP INTO WP HOOKS | ACF LOGIC FOR HOME
 	add_filter('the_content','ithub_home');
@@ -89,16 +89,19 @@
 	//NFFA - TAP INTO WP HOOKS | ACF LOGIC FOR SEND A REQUEST 
     add_filter('the_content', 'ithub_requests');
     if (!function_exists ('ithub_requests')) {
+
 		function ithub_requests($content) {
 			//GET THE SLUG
 			$mslug = get_post_field( 'post_name', get_post());
+
 		    //MODIFY THE CONTENT
 			if ($mslug == "send-a-request") {
 				//APPEND THE AFC LOGIC TO THE CONTENT
-				$content =  $content . ithub_requests_acf();
+				$content .= ithub_requests_acf();
 			} 
 			return $content;
 		}	
+	
 		//BUILD THE ACF LOGIC
 		function ithub_requests_acf(){
 			//GET THE WP PAGE ID
@@ -106,38 +109,45 @@
 				
 			//ASSOCIATE THE PAGE ID TO THE ACF FIELD GROUP
 			$field_group = get_field_objects($pageid);
+
 			//IF ACF FIELDS EXIST ON THIS PAGE...
 			if($field_group): 
 
+				//CREATE THE OUTPUT VARIABLE TO BE RETURNED
+				$out = '';
+
 				//CONSTRUCT THE BS4 LAYOUT TABS
-				echo "<ul id='mTabs' class='nav nav-tabs my-4' role='tablist'>";
+				$out .= "<ul id='mTabs' class='nav nav-tabs my-4' role='tablist'>";
 				$tabindex = 1;
 
 				foreach($field_group as $mfname => &$mfvalue) { 
 					if($mfvalue['label'] == "Title") {
-					echo "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
+					$out .= "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
 					$tabindex++;
 					}
 				}
-				echo "</ul>";
+				$out .= "</ul>";
 				unset($mfvalue);
 
 
 			//CONSTRUCT THE BS4 LAYOUT TAB CONTENT SECTIONS
-			echo "<div id='mTabContent' class='tab-content'>";
+			$out .= "<div id='mTabContent' class='tab-content'>";
 			$tabcontentindex = 1;
 			foreach($field_group as $mfname => &$mfvalue) { 
 					if($mfvalue['label'] == "Content") {
-						echo "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>{$mfvalue['value']}</div>";
+						$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>{$mfvalue['value']}</div>";
 						$tabcontentindex++;
 					}
 			}
-			echo "</div>";
+
+			$out .= "</div>";
 			unset($mfvalue);
 			/*highlight_string("<?php\n\$field_group =\n" . var_export($field_group, true) . ";\n?>");*/
 
 			endif;//END BS4 LAYOUT
-			
+
+			//now "return" the data. This causes the function to end its execution immediately and pass control back to the line from which it was called. 
+			return $out;			
 		}	
 	}
 	
@@ -163,37 +173,43 @@
 			$field_group = get_field_objects($pageid);
 			//IF ACF FIELDS EXIST ON THIS PAGE...
 			if($field_group): 
+
+				//DEFINE THE RETURNED VARIABLE
+				$out = '';
+
 				//CONSTRUCT THE BS4 LAYOUT TABS
-				echo "<ul id='mTabs' class='nav nav-tabs my-5' role='tablist'>";
+				$out .= "<ul id='mTabs' class='nav nav-tabs my-5' role='tablist'>";
 				$tabindex = 1;
 				foreach($field_group as $mfname => &$mfvalue) { 
 					if($mfvalue['label'] == "Title") {
-					echo "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
+					$out .= "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
 					$tabindex++;
 					}
 				}
-				echo "</ul>";
+				$out .= "</ul>";
 				unset($mfvalue);
 
 				//CONSTRUCT THE BS4 LAYOUT TAB CONTENT SECTIONS
-				echo "<div id='mTabContent' class='tab-content'>";
+				$out .= "<div id='mTabContent' class='tab-content'>";
 				$tabcontentindex = 1;
 				foreach($field_group as $mfname => &$mfvalue) { 
 						if($mfvalue['label'] == "Wrike Iframe") {
-							echo "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'><div class='embed-responsive embed-responsive-16by9'>{$mfvalue['value']}</div></div>";
+							$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'><div class='embed-responsive embed-responsive-16by9'>{$mfvalue['value']}</div></div>";
 							$tabcontentindex++;
 						}
 				}
-				echo "</div>";
+				$out .= "</div>";
 				unset($mfvalue);
 				/*highlight_string("<?php\n\$field_group =\n" . var_export($field_group, true) . ";\n?>");*/
 
-			
+				//RETURN OUTPUT
+				return $out;
+
 			endif;//END BS4 LAYOUT
 		}
     }
 
-	//NFFA - TAP INTO WP HOOKS | ACF LOGIC FOR POLICIES AND PROCEDURES
+	//NFFA - TAP INTO WP HOOKS | ACF LOGIC FOR POLICIES AND PROCEDURES | REVISIT RETURNING VARIABLE.
     add_filter('the_content', 'ithub_policies');
     if (!function_exists ('ithub_policies')) {
 		function ithub_policies($content) {
@@ -215,6 +231,10 @@
 			$field_group = get_field_objects($pageid);
 			//IF ACF FIELDS EXIST ON THIS PAGE...
 			if($field_group): 
+
+				//DEFINE THE RETURNED VARIABLE
+				$out = '';
+
 				//CONSTRUCT THE BS4 LAYOUT TABS
 				echo "<ul id='mTabs' class='nav nav-tabs my-5' role='tablist'>";
 				$tabindex = 1;
@@ -235,41 +255,41 @@
 			$tabindex = 1;
 			foreach($field_group as $mfname => &$mfvalue) { 
 								
-						echo "<div id='tab{$tabindex}content' class='tab-pane fade ".(($tabindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabindex}'>";
+				echo "<div id='tab{$tabindex}content' class='tab-pane fade ".(($tabindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabindex}'>";
 
-						if ($tabindex == 1) {
-						//EXCLUDE FIRST KEY FROM THE AFC ARRAY..WE DON'T NEED IT.
-						$sliced_array = array_slice($field_group, 1); 
-						$mcount = 1;
-							echo "<div class='row'>";
-							foreach($sliced_array as $mfname => &$mfvalue) {
-								//GET ALL CONTENT ASSOCIATED TO FIRST TAB
-								//FILTER ARRAY KEY BY PART OF A STRING VALUE
-								if (strpos($mfname, 'tab_01_') !== false) {
-								//GROUP ARRAY VALUES IN DIV EVERY X TIME
-								if ($mcount%2 == 1){  
+				if ($tabindex == 1) {
+				//EXCLUDE FIRST KEY FROM THE AFC ARRAY..WE DON'T NEED IT.
+				$sliced_array = array_slice($field_group, 1); 
+				$mcount = 1;
+				echo "<div class='row'>";
+					foreach($sliced_array as $mfname => &$mfvalue) {
+						//GET ALL CONTENT ASSOCIATED TO FIRST TAB
+						//FILTER ARRAY KEY BY PART OF A STRING VALUE
+						if (strpos($mfname, 'tab_01_') !== false) {
+						//GROUP ARRAY VALUES IN DIV EVERY X TIME
+						if ($mcount%2 == 1){  
 
-									echo "<div class='col-6'>";
-								}
-							
-								//DECOR SUBTITLES
-								if ($mfvalue['label'] == "Sub Title") {
-									echo "<h4 class='my-5'>".$mfvalue['value']. "</h4>";
-								}
-								//DECOR IFRAMES
-								if ($mfvalue['label'] == "Box Iframe") {
-									echo "<div class='embed-responsive embed-responsive-16by9'>".$mfvalue['value']. "</div>";
-								}
-								if ($mcount%2 == 0){echo "</div>";}
-								$mcount++;
-								}
-							}
-							echo "</div>";
-					} 
-						echo "</div>";   
+							echo "<div class='col-6'>";
+						}
+					
+						//DECOR SUBTITLES
+						if ($mfvalue['label'] == "Sub Title") {
+							echo "<h4 class='my-5'>".$mfvalue['value']. "</h4>";
+						}
+						//DECOR IFRAMES
+						if ($mfvalue['label'] == "Box Iframe") {
+							echo "<div class='embed-responsive embed-responsive-16by9'>".$mfvalue['value']. "</div>";
+						}
+						if ($mcount%2 == 0){echo "</div>";}
+						$mcount++;
+						}
+					}
+					echo "</div>";
+				} 
+				echo "</div>";   
 						//BREAK LOOP AFTER FIRST ITERATION
 						if($tabindex==1) {break;}                                     
-				}
+			}
 			
 				unset($mfvalue);
 				//////////////////////////////////////////
@@ -318,32 +338,39 @@
 			$field_group = get_field_objects($pageid);
 			//IF ACF FIELDS EXIST ON THIS PAGE...
 			if($field_group): 
+
+			//DEFINE THE RETURNED VARIABLE
+			$out = '';
+
 			//CONSTRUCT THE BS4 LAYOUT TABS
-			echo "<ul id='mTabs' class='nav nav-tabs my-5' role='tablist'>";
+			$out .= "<ul id='mTabs' class='nav nav-tabs my-5' role='tablist'>";
 			$tabindex = 1;
 			foreach($field_group as $mfname => &$mfvalue) { 
 				if($mfvalue['label'] == "Title") {
-				echo "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
+				$out .= "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
 				$tabindex++;
 				}
 			}
-			echo "</ul>";
+			$out .= "</ul>";
 			unset($mfvalue);
 
 			//CONSTRUCT THE BS4 LAYOUT TAB CONTENT SECTIONS
-			echo "<div id='mTabContent' class='tab-content'>";
+			$out .= "<div id='mTabContent' class='tab-content'>";
 			$tabcontentindex = 1;
 			foreach($field_group as $mfname => &$mfvalue) { 
 					if($mfvalue['label'] == "Content") {
-						echo "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>{$mfvalue['value']}</div>";
+						$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>{$mfvalue['value']}</div>";
 						$tabcontentindex++;
 					}
 			}
-			echo "</div>";
+			$out .= "</div>";
 			unset($mfvalue);
 			/*highlight_string("<?php\n\$field_group =\n" . var_export($field_group, true) . ";\n?>");*/   
 
 			endif;//END BS4 LAYOUT
+
+			//RETURN OUTPUT
+			return $out;
 		} 
 	}
 	
@@ -369,31 +396,38 @@
 			$field_group = get_field_objects($pageid);
 			//IF ACF FIELDS EXIST ON THIS PAGE...
 			if($field_group): 
+
+				//DEFINE THE RETURNED VARIABLE
+				$out = '';
+
 				//CONSTRUCT THE BS4 LAYOUT TABS
-				echo "<ul id='mTabs' class='nav nav-tabs my-5' role='tablist'>";
+				$out .= "<ul id='mTabs' class='nav nav-tabs my-5' role='tablist'>";
 				$tabindex = 1;
 				foreach($field_group as $mfname => &$mfvalue) { 
 					if($mfvalue['label'] == "Title") {
-					echo "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
+					$out .= "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
 					$tabindex++;
 					}
 				}
-				echo "</ul>";
+				$out .= "</ul>";
 				unset($mfvalue);
 
 				//CONSTRUCT THE BS4 LAYOUT TAB CONTENT SECTIONS
-				echo "<div id='mTabContent' class='tab-content'>";
+				$out .= "<div id='mTabContent' class='tab-content'>";
 				$tabcontentindex = 1;
 				foreach($field_group as $mfname => &$mfvalue) { 
 						if($mfvalue['label'] == "Content") {
-							echo "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>{$mfvalue['value']}</div>";
+							$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>{$mfvalue['value']}</div>";
 							$tabcontentindex++;
 						}
 				}
-				echo "</div>";
+				$out .= "</div>";
 				unset($mfvalue);
 				/*highlight_string("<?php\n\$field_group =\n" . var_export($field_group, true) . ";\n?>");*/  
 
 			endif;//END BS4 LAYOUT
+
+			//RETURN OUTPUT
+			return $out;
 		}
 	}
