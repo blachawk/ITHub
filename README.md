@@ -1,5 +1,5 @@
 # IT Hub Assistant
-The IT Hub Assistant plugin easily ports custom code onto multiple development servers, reducing the need to manually touch at each these environments from the file level.  Tested on WordPress 4.9.5 with with the ACF plugin and UnderStrap theme.
+The IT Hub Assistant plugin easily ports custom code onto multiple development servers, reducing the need to manually touch each of these environments from the file level.  Tested on WordPress 4.9.5 with with the ACF plugin and UnderStrap theme.
 
 # Feature Details
 * Automatically ports ACF object data onto pages without modifying custom templates directly.
