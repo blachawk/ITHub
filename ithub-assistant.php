@@ -9,6 +9,7 @@ Author: National FFA Organization
 Author URI: https://www.ffa.org
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+GitHub Plugin URI: https://github.com/blachawk/ITHub
 
   Copyright 2018  National FFA Organization (email : klewis@ffa.org)
   
@@ -27,10 +28,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 */
-
-//WP TOOLS TO HELP SUPPORT GIT
-//https://github.com/afragen/github-updater
-
 
 //CONSTANTS
 define( 'MY_PLUGIN_PATH', plugin_dir_path( __FILE__ ));
