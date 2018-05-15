@@ -4,7 +4,7 @@
 Plugin Name: ITHub Assistant
 Plugin URI: ithub.ffa.org
 Description: A WP Plugin that provides PHP and JavaScript support for IT Hub
-Version: 1.0
+Version: 1.1
 Author: NFFA IT Staff
 Author URI: https://www.ffa.org
 License: GPLv2 or later
