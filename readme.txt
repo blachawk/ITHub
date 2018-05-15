@@ -11,7 +11,7 @@ GitHub Plugin URI: https://github.com/blachawk/ITHub
 
 == Description ==
 
-The IT Hub Assistant plugin easily ports custom code onto multiple development servers, reducing the need to manually touch each of these environments from the file level.  Tested on WordPress 4.9.5 with with the ACF plugin and UnderStrap theme.
+The IT Hub Assistant plugin easily ports custom code onto multiple development servers, reducing the need to manually touch each of these environments from the file level.  Tested on WordPress 4.9.5 with the ACF plugin and UnderStrap Starter Theme.
 
 == Features Details ==
 
