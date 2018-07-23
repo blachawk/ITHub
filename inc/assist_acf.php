@@ -150,25 +150,84 @@
 			return $out;			
 		}	
 	}
+
+
+		//NFFA - TAP INTO WP HOOKS | ACF LOGIC FOR PROJECTS
+		add_filter('the_content', 'ithub_projects');
+		if (!function_exists ('ithub_projects')) {
+			function ithub_projects($content) {
+				//GET THE SLUG
+				$mslug = get_post_field( 'post_name', get_post());
+				//MODIFY THE CONTENT
+				if ($mslug == "projects") {
+					//APPEND THE AFC LOGIC TO THE CONTENT
+					$content =  $content . ithub_projects_acf();
+				} 
+				return $content;
+			}
+			//BUILD THE ACF LOGIC
+			function ithub_projects_acf(){
 	
-	//NFFA - TAP INTO WP HOOKS | ACF LOGIC FOR PROJECTS
-    add_filter('the_content', 'ithub_projects');
-    if (!function_exists ('ithub_projects')) {
-		function ithub_projects($content) {
+				//GET THE WP PAGE ID
+				$pageid = get_page_by_path('projects')->ID;  
+				//ASSOCIATE THE PAGE ID TO THE ACF FIELD GROUP
+				$field_group = get_field_objects($pageid);
+				//IF ACF FIELDS EXIST ON THIS PAGE...
+				if($field_group): 
+	
+					//DEFINE THE RETURNED VARIABLE
+					$out = '';
+	
+					//CONSTRUCT THE BS4 LAYOUT TABS
+					$out .= "<ul id='mTabs' class='nav nav-tabs my-5' role='tablist'>";
+					$tabindex = 1;
+					foreach($field_group as $mfname => &$mfvalue) { 
+						if($mfvalue['label'] == "Title") {
+						$out .= "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
+						$tabindex++;
+						}
+					}
+					$out .= "</ul>";
+					unset($mfvalue);
+	
+					//CONSTRUCT THE BS4 LAYOUT TAB CONTENT SECTIONS
+					$out .= "<div id='mTabContent' class='tab-content'>";
+					$tabcontentindex = 1;
+					foreach($field_group as $mfname => &$mfvalue) { 
+							if($mfvalue['label'] == "Wrike Iframe") {
+								$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'><div class='embed-responsive embed-responsive-16by9'>{$mfvalue['value']}</div></div>";
+								$tabcontentindex++;
+							}
+					}
+					$out .= "</div>";
+					unset($mfvalue);
+					/*highlight_string("<?php\n\$field_group =\n" . var_export($field_group, true) . ";\n?>");*/
+	
+					//RETURN OUTPUT
+					return $out;
+	
+				endif;//END BS4 LAYOUT
+			}
+		}
+
+	//NFFA - TAP INTO WP HOOKS | ACF LOGIC FOR MINOR DEVELOPMENT
+    add_filter('the_content', 'ithub_minor_dev');
+    if (!function_exists ('ithub_minor_dev')) {
+		function ithub_minor_dev($content) {
 			//GET THE SLUG
 			$mslug = get_post_field( 'post_name', get_post());
 		    //MODIFY THE CONTENT
-			if ($mslug == "projects") {
+			if ($mslug == "minor-development") {
 				//APPEND THE AFC LOGIC TO THE CONTENT
-				$content =  $content . ithub_projects_acf();
+				$content =  $content . ithub_minor_dev_acf();
 			} 
 			return $content;
 		}
 		//BUILD THE ACF LOGIC
-		function ithub_projects_acf(){
+		function ithub_minor_dev_acf(){
 
 			//GET THE WP PAGE ID
-			$pageid = get_page_by_path('projects')->ID;  
+			$pageid = get_page_by_path('minor-development')->ID;  
 			//ASSOCIATE THE PAGE ID TO THE ACF FIELD GROUP
 			$field_group = get_field_objects($pageid);
 			//IF ACF FIELDS EXIST ON THIS PAGE...
@@ -181,7 +240,8 @@
 				$out .= "<ul id='mTabs' class='nav nav-tabs my-5' role='tablist'>";
 				$tabindex = 1;
 				foreach($field_group as $mfname => &$mfvalue) { 
-					if($mfvalue['label'] == "Title") {
+				
+					if($mfvalue['label'] == "Tab Title") {
 					$out .= "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
 					$tabindex++;
 					}
@@ -193,8 +253,9 @@
 				$out .= "<div id='mTabContent' class='tab-content'>";
 				$tabcontentindex = 1;
 				foreach($field_group as $mfname => &$mfvalue) { 
-						if($mfvalue['label'] == "Wrike Iframe") {
-							$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'><div class='embed-responsive embed-responsive-16by9'>{$mfvalue['value']}</div></div>";
+					
+						if($mfvalue['label'] == "Tab Content") {
+							$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>{$mfvalue['value']}</div>";
 							$tabcontentindex++;
 						}
 				}
