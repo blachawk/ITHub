@@ -255,7 +255,7 @@
 				foreach($field_group as $mfname => &$mfvalue) { 
 					
 						if($mfvalue['label'] == "Tab Content") {
-							$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>{$mfvalue['value']}</div>";
+							$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'><div class='embed-responsive embed-responsive-16by9'{$mfvalue['value']}</div></div>";
 							$tabcontentindex++;
 						}
 				}
