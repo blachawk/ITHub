@@ -765,7 +765,7 @@
 						<h2 class="m-0 label-set"><?php echo $mlabel ?></h2>
 
 						<div class="row p-4 content-set">
-							<div class="col">
+							<div class="col text-left">
 								<?php echo $mvalue ?>
 							</div>
 						</div> 
@@ -780,7 +780,7 @@
 						?>
 						<h2 class="m-0 label-set"><?php echo $mlabel ?></h2>
 						<div class="row p-3 content-set">
-								<div class="col">
+								<div class="col text-left">
 										<?php echo $mvalue ?>
 								</div>
 							</div> 
@@ -807,91 +807,91 @@
 			return $content;
 		}
 
-//BUILD THE LOOP AND LOAD THE POSTS
-function ithub_exec_summary_landing_loop() {
+		//BUILD THE LOOP AND LOAD THE POSTS
+		function ithub_exec_summary_landing_loop() {
 
-	//DEFINE OUTPUT VAR
-	$out = '';
+			//DEFINE OUTPUT VAR
+			$out = '';
 
-	//LOOP - GET AL EXECUTIVE SUMMARIES VIA GET_POSTS()
-	$args = array(
-		'numberposts' => -1,
-		'orderby' => 'publish_date',
-		'order'   => 'DESC',
-		'category_name' => 'executive-summary',
-		'meta_query' => array(
-			'relation' => 'OR',
-			array(
-				'key' => 'product_owner',
-				'value' => 'leeanneshille',
-				'compare' => 'LIKE'
-			),
-			array(
-			'key' => 'product_owner',
-			'value' => 'staciglacer',
-			'compare' => 'LIKE'
-			),
-			array(
-			'key' => 'product_owner',
-			'value' => 'mandyhazlett',
-			'compare' => 'LIKE'
-			)
-		)
+			//LOOP - GET AL EXECUTIVE SUMMARIES VIA GET_POSTS()
+			$args = array(
+				'numberposts' => -1,
+				'orderby' => 'publish_date',
+				'order'   => 'DESC',
+				'category_name' => 'executive-summary',
+				'meta_query' => array(
+					'relation' => 'OR',
+					array(
+						'key' => 'product_owner',
+						'value' => 'leeanneshille',
+						'compare' => 'LIKE'
+					),
+					array(
+					'key' => 'product_owner',
+					'value' => 'staciglacer',
+					'compare' => 'LIKE'
+					),
+					array(
+					'key' => 'product_owner',
+					'value' => 'mandyhazlett',
+					'compare' => 'LIKE'
+					)
+				)
 
-		);
-		$mExecSumPosts = get_posts($args);
+				);
+				$mExecSumPosts = get_posts($args);
 
-		//REFERENCE LOOP FOR PREVIEWING REVISIONS
-		if ($mExecSumPosts) {
-			foreach ($mExecSumPosts as $post):
-				setup_postdata($post);
+				//REFERENCE LOOP FOR PREVIEWING REVISIONS
+				if ($mExecSumPosts) {
+					foreach ($mExecSumPosts as $post):
+						setup_postdata($post);
 
-				//DEFINE LOOP VARS
-				$mtitle = $post->post_title;
-				$mpublisheddate = get_the_time('Y-m-d', $post->ID);
-				$mformateddate =  date("l F jS, Y",  strtotime($mpublisheddate));
-				//PULL ACF DATA FROM THESE POSTS
-				$mproductowners = get_post_meta($post->ID,'product_owner');
-				$mitdevlead = get_post_meta($post->ID,'it_developer_lead');
-				$mstartdate = get_post_meta($post->ID,'discovery_planned_from');
-				$mduedate = get_post_meta($post->ID,'due_date');
+						//DEFINE LOOP VARS
+						$mtitle = $post->post_title;
+						$mpublisheddate = get_the_time('Y-m-d', $post->ID);
+						$mformateddate =  date("l F jS, Y",  strtotime($mpublisheddate));
+						//PULL ACF DATA FROM THESE POSTS
+						$mproductowners = get_post_meta($post->ID,'product_owner');
+						$mitdevlead = get_post_meta($post->ID,'it_developer_lead');
+						$mstartdate = get_post_meta($post->ID,'discovery_planned_from');
+						$mduedate = get_post_meta($post->ID,'due_date');
 
-				//OUTPUT DATA
-				$out.= "<div class='row border-bottom'>";
-				$out.= "<div class='col-md-12 p-3'>";
-				$out.= "<h3><a href='{$post->post_name}'>{$mtitle}</a></h3>";
-				$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>Status Date:</strong><span class='d-block'>{$mpublisheddate}</span></div>";
-				$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>The Product Owner:</strong>";
-				foreach($mproductowners as $mkey => $mvalue) {
-					foreach($mvalue as $mname){
-						$out.="<span class='d-block'>".$mname."</span>";
-					}
+						//OUTPUT DATA
+						$out.= "<div class='row border-bottom'>";
+						$out.= "<div class='col-md-12 p-3'>";
+						$out.= "<h3><a href='{$post->post_name}'>{$mtitle}</a></h3>";
+						$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>Status Date:</strong><span class='d-block'>{$mpublisheddate}</span></div>";
+						$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>The Product Owner:</strong>";
+						foreach($mproductowners as $mkey => $mvalue) {
+							foreach($mvalue as $mname){
+								$out.="<span class='d-block'>".$mname."</span>";
+							}
+						}
+						$out.= "</div>";
+						$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>IT Developer Lead:</strong>";
+						foreach($mitdevlead as $mkey => $mvalue) {
+							foreach($mvalue as $mname){
+								$out.="<span class='d-block'>".$mname."</span>";
+							}
+						}
+						$out.= "</div>";
+						$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>Start Date:</strong>";
+						foreach($mstartdate as $mkey => $mvalue) {
+							$out.="<span class='d-block'>".$mvalue."</span>";
+						}
+						$out.= "</div>";
+						$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>Due Date:</strong>";
+						foreach($mduedate as $mkey => $mvalue) {
+							$out.="<span class='d-block'>".$mvalue."</span>";
+						}
+						$out.= "</div>";
+						$out.= "</div>";
+						$out.= "</div>";
+					endforeach;
+					wp_reset_postdata();
 				}
-				$out.= "</div>";
-				$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>IT Developer Lead:</strong>";
-				foreach($mitdevlead as $mkey => $mvalue) {
-					foreach($mvalue as $mname){
-						$out.="<span class='d-block'>".$mname."</span>";
-					}
-				}
-				$out.= "</div>";
-				$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>Start Date:</strong>";
-				foreach($mstartdate as $mkey => $mvalue) {
-					$out.="<span class='d-block'>".$mvalue."</span>";
-				}
-				$out.= "</div>";
-				$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>Due Date:</strong>";
-				foreach($mduedate as $mkey => $mvalue) {
-					$out.="<span class='d-block'>".$mvalue."</span>";
-				}
-				$out.= "</div>";
-				$out.= "</div>";
-				$out.= "</div>";
-			endforeach;
-			wp_reset_postdata();
+			return $out;
 		}
-	return $out;
-}
 
 }
 
