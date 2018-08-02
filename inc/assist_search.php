@@ -33,7 +33,14 @@
             );
             $mdata_array_pages = get_posts($args_pages);
             /*highlight_string("<?php\n\$mdata_array_pages=\n" . var_export($mdata_array_pages, true) . ";\n?>");*/
-              
+
+            //GET POSTS
+            $args_posts = array(
+                'offset'    => 0,
+                'posts_per_page' => -1,
+                'post_type' => 'post'
+            );
+            $mdata_array_posts = get_posts($args_posts);
 
             //GET CALENDAR EVENTS
             $args_cal_events = array(
@@ -56,6 +63,14 @@
                 $permalink = get_permalink($item->ID);
                 $mcontent = wp_filter_nohtml_kses($item->post_content);
                 echo "<li class='list-group-item border-0 m-0 p-0'><a class='alert alert-ithub-dark m-0 py-3' href='".$permalink."' class='p-3' data-meta='".$item->post_title.",".$mcontent."'>".$item->post_title."</a></li>";
+            } 
+
+            foreach($mdata_array_posts as $item) {
+                $permalink = get_permalink($item->ID);
+                $mcontent = wp_filter_nohtml_kses($item->post_content);
+                $mexcerpt = wp_specialchars_decode(get_the_excerpt($item->ID)); 
+                $mpubdate = get_the_date('Y-m-d', $item->ID);
+                echo "<li class='list-group-item border-0 m-0 p-0'><a class='alert alert-ithub-dark m-0 py-3' href='".$permalink."' class='p-3' data-meta='".$item->post_title.",".$mexcerpt.",".$mpubdate."'>".$item->post_title." - ".get_the_time('Y-m-d', $item->ID)."</a></li>";
             } 
 
             foreach($mdata_array_cal_events as $item) {

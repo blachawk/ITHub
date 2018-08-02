@@ -46,14 +46,14 @@
     }
     
     /**
-	* NFFA - TAP INTO WP HOOKS | REMOVE POSTS FROM WP ADMIN MENU
+	* NFFA - TAP INTO WP HOOKS | REMOVE POSTS FROM WP ADMIN MENU | WE ARE NOW USING THIS TO ACCOMMODATE OUR DEVELOPERS TO FILL OUT AN EXECUTIVE SUMMARY.
 	*/
-	add_action('admin_menu', 'ithub_remove_wpadmin_menu');
-	if ( ! function_exists ( 'ithub_remove_wpadmin_menu' ) ) {
-		function ithub_remove_wpadmin_menu() {
-			remove_menu_page('edit.php');
-		}
-	}
+	//add_action('admin_menu', 'ithub_remove_wpadmin_menu');
+	// if ( ! function_exists ( 'ithub_remove_wpadmin_menu' ) ) {
+	// 	function ithub_remove_wpadmin_menu() {
+	// 		remove_menu_page('edit.php');
+	// 	}
+	// }
 	
 	/**
 	 * NFFA - TAP INTO WP HOOKS | 301 REDIRECTS
@@ -70,3 +70,24 @@
 			}
 		}
     }
+
+/**
+ * NFFA - PLACE THE AUTHOR INFORMATION FOR THE GIVEN POST, WITHIN THE PUBLISH META BOX
+ */
+add_action( 'admin_menu', 'remove_author_box' );
+add_action( 'post_submitbox_misc_actions', 'author_in_publish' );
+
+function remove_author_box() {
+
+    remove_meta_box( 'authordiv', 'post', 'normal' );
+}
+
+function author_in_publish() {
+
+    global $post_ID;
+
+    $post = get_post( $post_ID );
+    echo '<div class="misc-pub-section">Author: ';
+    post_author_meta_box( $post );
+    echo '</div>';
+}
