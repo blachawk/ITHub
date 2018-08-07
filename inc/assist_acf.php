@@ -813,32 +813,47 @@
 			//DEFINE OUTPUT VAR
 			$out = '';
 
-			//LOOP - GET AL EXECUTIVE SUMMARIES VIA GET_POSTS()
-			$args = array(
-				'numberposts' => -1,
-				'orderby' => 'publish_date',
-				'order'   => 'DESC',
-				'category_name' => 'executive-summary',
-				'meta_query' => array(
-					'relation' => 'OR',
-					array(
-						'key' => 'product_owner',
-						'value' => 'leeanneshille',
-						'compare' => 'LIKE'
-					),
-					array(
-					'key' => 'product_owner',
-					'value' => 'staciglacer',
-					'compare' => 'LIKE'
-					),
-					array(
-					'key' => 'product_owner',
-					'value' => 'mandyhazlett',
-					'compare' => 'LIKE'
+		
+				//LOOP - GET AL EXECUTIVE SUMMARIES VIA GET_POSTS()
+				$args = array(
+					'numberposts' => -1,
+					'orderby' => 'publish_date',
+					'order'   => 'DESC',
+					'category_name' => 'executive-summary',
+					'meta_query' => array(
+						'relation' => 'OR',
+						array(
+							'key' => 'product_owner',
+							'value' => 'Lee Anne Shiller',
+							'compare' => 'LIKE'
+						),
+						array(
+							'key' => 'product_owner',
+							'value' => 'Staci Glacer',
+							'compare' => 'LIKE'
+						),
+						array(
+							'key' => 'product_owner',
+							'value' => 'Mandy Hazlett',
+							'compare' => 'LIKE'
+						),
+						array(
+							'key' => 'product_owner',
+							'value' => 'Marty Peterson',
+							'compare' => 'LIKE'
+						),
+						array(
+							'key' => 'product_owner',
+							'value' => 'IT Team',
+							'compare' => 'LIKE'
+						),
+						array(
+							'key' => 'product_owner',
+							'value' => 'MCS',
+							'compare' => 'LIKE'
+						)
 					)
-				)
-
-				);
+					);
 				$mExecSumPosts = get_posts($args);
 
 				//REFERENCE LOOP FOR PREVIEWING REVISIONS
@@ -893,6 +908,92 @@
 			return $out;
 		}
 
+}
+
+
+add_filter('the_content', 'ithub_about_it');
+if (!function_exists('ithub_about_it')) {
+	function ithub_about_it($content) {
+
+	//GET THE SLUG
+			$mslug = get_post_field( 'post_name', get_post());
+		    //MODIFY THE CONTENT
+			if ($mslug == "about") {
+				//APPEND THE AFC LOGIC TO THE CONTENT
+				$content =  $content . ithub_about_it_personnel();
+			} 
+			return $content;
+	}
+
+	function ithub_about_it_personnel() {
+		//DEFINE OUTPUT VAR
+		$out = '';
+		
+		// check if the repeater field has rows of data
+		//IT PERSONNEL
+		if( have_rows('it_personnel_details') ):
+
+			$out.="<div class='row text-center'>";
+
+			$mvalue = get_field("about_it_content");
+
+			$out.="<div class='col-sm-12'>";
+			$out.= $mvalue;
+			$out.="</div>";
+
+			// loop through the rows of data
+			while ( have_rows('it_personnel_details') ) : the_row();
+
+			 // display a sub field value
+			$out.= "<div class='col-sm-3 py-2'>";
+			$out.=  "<h4>".get_sub_field('it_member_name')."</h4>";
+	        $out.=  "<p>".get_sub_field('it_member_position')."</p>";
+		    $out.=  "</div>";
+			 
+			endwhile;
+
+			$out.="</div>";
+
+		else :
+		$out.= 'no IT personnel found';
+		endif;
+
+		//PROJECT MANAGERS
+		if( have_rows('project_manager_details') ):
+
+			$out.="<div class='row text-center'>";
+			$out.="<div class='col-sm-12'>";
+			$out.="<ul class='list-group'>";
+			$out.="<li class='list-group-item list-group-item-info p-0 my-4'><h2 class='text-center py-1 m-0'>Project Managers</h2></li>";
+			$out.="</ul>";
+			$out.="</div>";
+
+			// loop through the rows of data
+			while ( have_rows('project_manager_details') ) : the_row();
+
+			 // display a sub field value
+			$out.= "<div class='col-sm-3 py-2'>";
+			$out.= "<h4>".get_sub_field('pm_name')."</h4>";
+			$out.= "<p>".get_sub_field('pm_email')."</p>";
+			$out.= "<p>".get_sub_field('pm_phone_number')."</p>";
+
+            if(get_sub_field('pm_owner_of')):
+			$out.= "<div class='py-2'><p>Projects Owned:</p><b>".get_sub_field('pm_owner_of')."</b></div>";
+			endif;
+			
+			$out.=  "</div>";
+			 
+			endwhile;
+
+			$out.="</div>";
+
+		else :
+		$out.= 'no IT personnel found';
+		
+		endif;
+			
+		return $out;
+	}
 }
 
 
