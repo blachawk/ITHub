@@ -814,7 +814,7 @@
 			$out = '';
 
 		
-				//LOOP - GET AL EXECUTIVE SUMMARIES VIA GET_POSTS()
+				//LOOP - GET ALL EXECUTIVE SUMMARIES VIA GET_POSTS()
 				$args = array(
 					'numberposts' => -1,
 					'orderby' => 'publish_date',
@@ -991,7 +991,7 @@ if (!function_exists('ithub_about_it')) {
 		$out.= 'no IT personnel found';
 		
 		endif;
-			
+
 		return $out;
 	}
 }
