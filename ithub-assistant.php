@@ -62,6 +62,10 @@ require_once( MY_PLUGIN_PATH .'/inc/assist_acf.php' );
 //MANAGE SEARCH AND SEARCH HELPER NEEDS
 require_once( MY_PLUGIN_PATH .'/inc/assist_search.php' );
 
+//MANAGE TAGS
+require_once( MY_PLUGIN_PATH .'/inc/assist_tags.php' );
+
+
 //MANAGE ALL WP AND CUSTOM HOOKS
 //require_once( MY_PLUGIN_PATH .'/inc/assist_revisions.php' );
 

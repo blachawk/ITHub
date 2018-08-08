@@ -320,36 +320,19 @@
 
 				if ($tabindex == 1) {
 				//EXCLUDE FIRST KEY FROM THE AFC ARRAY..WE DON'T NEED IT.
-				$sliced_array = array_slice($field_group, 1); 
-				$mcount = 1;
-				echo "<div class='row'>";
-					foreach($sliced_array as $mfname => &$mfvalue) {
-						//GET ALL CONTENT ASSOCIATED TO FIRST TAB
-						//FILTER ARRAY KEY BY PART OF A STRING VALUE
-						if (strpos($mfname, 'tab_01_') !== false) {
-						//GROUP ARRAY VALUES IN DIV EVERY X TIME
-						if ($mcount%2 == 1){  
-
-							echo "<div class='col-6'>";
-						}
-					
-						//DECOR SUBTITLES
-						if ($mfvalue['label'] == "Sub Title") {
-							echo "<h4 class='my-5'>".$mfvalue['value']. "</h4>";
-						}
-						//DECOR IFRAMES
-						if ($mfvalue['label'] == "Box Iframe") {
-							echo "<div class='embed-responsive embed-responsive-16by9'>".$mfvalue['value']. "</div>";
-						}
-						if ($mcount%2 == 0){echo "</div>";}
-						$mcount++;
-						}
-					}
+				echo "<div class='row border'>";
+					$columns = 3;
+					foreach(range(1,$columns) as $index) {
+					echo "<div class='col-6 p-3'>";
+						echo "<h4 class='my-5'>".get_field('tab_01_subtitle_0'.$index)."</h4>";
+						echo "<div class='embed-responsive embed-responsive-16by9'>".get_field('tab_01_boxiframe_0'.$index)."</div>";
 					echo "</div>";
+					}
+				 echo "</div>";
 				} 
 				echo "</div>";   
-						//BREAK LOOP AFTER FIRST ITERATION
-						if($tabindex==1) {break;}                                     
+				//BREAK LOOP AFTER FIRST ITERATION
+				if($tabindex==1) {break;}                                     
 			}
 			
 				unset($mfvalue);
