@@ -151,7 +151,6 @@
 		}	
 	}
 
-
 	//NFFA - TAP INTO WP HOOKS | ACF LOGIC FOR PROJECTS
 	add_filter('the_content', 'ithub_projects');
 	if (!function_exists ('ithub_projects')) {
@@ -572,6 +571,7 @@
 
 				<div class="row bg-white border-right border-left border-top">
 					<?php
+
 						//HANDLE ALL PERSONNEL INVOLVED IN THS PROJECT
 						function mpersonnel($mfield) {
 							$field = get_field_object($mfield);
@@ -776,7 +776,7 @@
 		}
 	}
 
-	//NFFA - EXECUTIVE SUMMARY LANDING PAGE (SHOW FULL LISTING VIA GET POSTS LOOP)
+	//NFFA - TAP INTO WP HOOKS | EXECUTIVE SUMMARY LANDING PAGE (SHOW FULL LISTING VIA GET POSTS LOOP)
 	add_filter('the_content', 'ithub_exec_summary_landing');
 	if (!function_exists ('ithub_exec_summary_landing')) {
 		function ithub_exec_summary_landing($content) {
@@ -793,54 +793,38 @@
 		//BUILD THE LOOP AND LOAD THE POSTS
 		function ithub_exec_summary_landing_loop() {
 
-			//DEFINE OUTPUT VAR
-			$out = '';
+				//GET ALL PRODUCT OWNERS VIA ACF KEY VALUE
+				function mowners() {
+					$field_key = "field_5b5b34f4ed085";
+					$field = get_field_object($field_key);
+						
+					$mowners['relation'] = 'OR';
 
-		
-				//LOOP - GET ALL EXECUTIVE SUMMARIES VIA GET_POSTS()
+					foreach($field['choices'] as $mkey=>$mvalue){
+						$mowners[] = array(
+						 'key'=> 'product_owner',
+						 'value'=> $mvalue,
+						 'compare'=> 'LIKE'
+						);
+					}
+				return $mowners;	
+				}
+
+                //SETUP ARGUMENT CRITERIA FOR GET_POSTS()
 				$args = array(
 					'numberposts' => -1,
 					'orderby' => 'publish_date',
 					'order'   => 'DESC',
 					'category_name' => 'executive-summary',
-					'meta_query' => array(
-						'relation' => 'OR',
-						array(
-							'key' => 'product_owner',
-							'value' => 'Lee Anne Shiller',
-							'compare' => 'LIKE'
-						),
-						array(
-							'key' => 'product_owner',
-							'value' => 'Staci Glacer',
-							'compare' => 'LIKE'
-						),
-						array(
-							'key' => 'product_owner',
-							'value' => 'Mandy Hazlett',
-							'compare' => 'LIKE'
-						),
-						array(
-							'key' => 'product_owner',
-							'value' => 'Marty Peterson',
-							'compare' => 'LIKE'
-						),
-						array(
-							'key' => 'product_owner',
-							'value' => 'IT Team',
-							'compare' => 'LIKE'
-						),
-						array(
-							'key' => 'product_owner',
-							'value' => 'MCS',
-							'compare' => 'LIKE'
-						)
-					)
+					'meta_query' => array(mowners())
 					);
 				$mExecSumPosts = get_posts($args);
 
-				//REFERENCE LOOP FOR PREVIEWING REVISIONS
+				//IF ANY POSTS MEET THE ARGUMENT CRITERIA...
 				if ($mExecSumPosts) {
+
+					//...OUTPUT THE DATA AND LIST RESULTS!
+					$out = '';
 					foreach ($mExecSumPosts as $post):
 						setup_postdata($post);
 
@@ -848,18 +832,19 @@
 						$mtitle = $post->post_title;
 						$mpublisheddate = get_the_time('Y-m-d', $post->ID);
 						$mformateddate =  date("l F jS, Y",  strtotime($mpublisheddate));
-						//PULL ACF DATA FROM THESE POSTS
+
+						//PULL ACF DATA FROM THE GIVEN POST IN THIS LOOP!
 						$mproductowners = get_post_meta($post->ID,'product_owner');
 						$mitdevlead = get_post_meta($post->ID,'it_developer_lead');
 						$mstartdate = get_post_meta($post->ID,'discovery_planned_from');
 						$mduedate = get_post_meta($post->ID,'due_date');
-
-						//OUTPUT DATA
+					
 						$out.= "<div class='row border-bottom'>";
 						$out.= "<div class='col-md-12 p-3'>";
 						$out.= "<h3><a href='{$post->post_name}'>{$mtitle}</a></h3>";
 						$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>Status Date:</strong><span class='d-block'>{$mpublisheddate}</span></div>";
 						$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>The Product Owner:</strong>";
+
 						foreach($mproductowners as $mkey => $mvalue) {
 							foreach($mvalue as $mname){
 								$out.="<span class='d-block'>".$mname."</span>";
@@ -867,13 +852,15 @@
 						}
 						$out.= "</div>";
 						$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>IT Developer Lead:</strong>";
+					
 						foreach($mitdevlead as $mkey => $mvalue) {
 							foreach($mvalue as $mname){
-								$out.="<span class='d-block'>".$mname."</span>";
+							$out.="<span class='d-block'>".$mname."</span>";
 							}
 						}
 						$out.= "</div>";
 						$out.= "<div class='d-inline-block align-top mx-2 h5 text-secondary'><strong>Start Date:</strong>";
+					
 						foreach($mstartdate as $mkey => $mvalue) {
 							$out.="<span class='d-block'>".$mvalue."</span>";
 						}
@@ -890,94 +877,93 @@
 				}
 			return $out;
 		}
-
-}
-
-
-add_filter('the_content', 'ithub_about_it');
-if (!function_exists('ithub_about_it')) {
-	function ithub_about_it($content) {
-
-	//GET THE SLUG
-			$mslug = get_post_field( 'post_name', get_post());
-		    //MODIFY THE CONTENT
-			if ($mslug == "about") {
-				//APPEND THE AFC LOGIC TO THE CONTENT
-				$content =  $content . ithub_about_it_personnel();
-			} 
-			return $content;
 	}
 
-	function ithub_about_it_personnel() {
-		//DEFINE OUTPUT VAR
-		$out = '';
-		
-		// check if the repeater field has rows of data
-		//IT PERSONNEL
-		if( have_rows('it_personnel_details') ):
+    //NFFA - TAP INTO WP HOOKS | CUSTOMIZE THE ABOUT IT PAGE 
+	add_filter('the_content', 'ithub_about_it');
+	if (!function_exists('ithub_about_it')) {
+		function ithub_about_it($content) {
 
-			$out.="<div class='row text-center'>";
+		//GET THE SLUG
+				$mslug = get_post_field( 'post_name', get_post());
+				//MODIFY THE CONTENT
+				if ($mslug == "about") {
+					//APPEND THE AFC LOGIC TO THE CONTENT
+					$content =  $content . ithub_about_it_personnel();
+				} 
+				return $content;
+		}
 
-			$mvalue = get_field("about_it_content");
-
-			$out.="<div class='col-sm-12'>";
-			$out.= $mvalue;
-			$out.="</div>";
-
-			// loop through the rows of data
-			while ( have_rows('it_personnel_details') ) : the_row();
-
-			 // display a sub field value
-			$out.= "<div class='col-sm-3 py-2'>";
-			$out.=  "<h4>".get_sub_field('it_member_name')."</h4>";
-	        $out.=  "<p>".get_sub_field('it_member_position')."</p>";
-		    $out.=  "</div>";
-			 
-			endwhile;
-
-			$out.="</div>";
-
-		else :
-		$out.= 'no IT personnel found';
-		endif;
-
-		//PROJECT MANAGERS
-		if( have_rows('project_manager_details') ):
-
-			$out.="<div class='row text-center'>";
-			$out.="<div class='col-sm-12'>";
-			$out.="<ul class='list-group'>";
-			$out.="<li class='list-group-item list-group-item-info p-0 my-4'><h2 class='text-center py-1 m-0'>Project Managers</h2></li>";
-			$out.="</ul>";
-			$out.="</div>";
-
-			// loop through the rows of data
-			while ( have_rows('project_manager_details') ) : the_row();
-
-			 // display a sub field value
-			$out.= "<div class='col-sm-3 py-2'>";
-			$out.= "<h4>".get_sub_field('pm_name')."</h4>";
-			$out.= "<p>".get_sub_field('pm_email')."</p>";
-			$out.= "<p>".get_sub_field('pm_phone_number')."</p>";
-
-            if(get_sub_field('pm_owner_of')):
-			$out.= "<div class='py-2'><p>Projects Owned:</p><b>".get_sub_field('pm_owner_of')."</b></div>";
-			endif;
+		function ithub_about_it_personnel() {
+			//DEFINE OUTPUT VAR
+			$out = '';
 			
-			$out.=  "</div>";
-			 
-			endwhile;
+			// check if the repeater field has rows of data
+			//IT PERSONNEL
+			if( have_rows('it_personnel_details') ):
 
-			$out.="</div>";
+				$out.="<div class='row text-center'>";
 
-		else :
-		$out.= 'no IT personnel found';
-		
-		endif;
+				$mvalue = get_field("about_it_content");
 
-		return $out;
+				$out.="<div class='col-sm-12'>";
+				$out.= $mvalue;
+				$out.="</div>";
+
+				// loop through the rows of data
+				while ( have_rows('it_personnel_details') ) : the_row();
+
+				// display a sub field value
+				$out.= "<div class='col-sm-3 py-2'>";
+				$out.=  "<h4>".get_sub_field('it_member_name')."</h4>";
+				$out.=  "<p>".get_sub_field('it_member_position')."</p>";
+				$out.=  "</div>";
+				
+				endwhile;
+
+				$out.="</div>";
+
+			else :
+			$out.= 'no IT personnel found';
+			endif;
+
+			//PROJECT MANAGERS
+			if( have_rows('project_manager_details') ):
+
+				$out.="<div class='row text-center'>";
+				$out.="<div class='col-sm-12'>";
+				$out.="<ul class='list-group'>";
+				$out.="<li class='list-group-item list-group-item-info p-0 my-4'><h2 class='text-center py-1 m-0'>Project Managers</h2></li>";
+				$out.="</ul>";
+				$out.="</div>";
+
+				// loop through the rows of data
+				while ( have_rows('project_manager_details') ) : the_row();
+
+				// display a sub field value
+				$out.= "<div class='col-sm-3 py-2'>";
+				$out.= "<h4>".get_sub_field('pm_name')."</h4>";
+				$out.= "<p>".get_sub_field('pm_email')."</p>";
+				$out.= "<p>".get_sub_field('pm_phone_number')."</p>";
+
+				if(get_sub_field('pm_owner_of')):
+				$out.= "<div class='py-2'><p>Projects Owned:</p><b>".get_sub_field('pm_owner_of')."</b></div>";
+				endif;
+				
+				$out.=  "</div>";
+				
+				endwhile;
+
+				$out.="</div>";
+
+			else :
+			$out.= 'no IT personnel found';
+			
+			endif;
+
+			return $out;
+		}
 	}
-}
 
 
 
