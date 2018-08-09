@@ -573,6 +573,8 @@
 					<?php
 
 						//HANDLE ALL PERSONNEL INVOLVED IN THS PROJECT
+
+						if (!function_exists ('mpersonnel')) {
 						function mpersonnel($mfield) {
 							$field = get_field_object($mfield);
 							$values = get_field($mfield);
@@ -587,6 +589,7 @@
 							endif;
 							unset($field,$values);
 						} 
+					}
 					?>
 					<?php 
 					mpersonnel("product_owner");
@@ -603,6 +606,7 @@
 
 						<?php
 							//GET THE CURRENT STATUS
+							if (!function_exists ('mcurrentstatus')) {
 							function mcurrentstatus($mfield) {
 								$field = get_field_object($mfield);
 								$value = get_field($mfield);
@@ -625,6 +629,7 @@
 								}
 								unset($field,$value);
 							}
+						}
 						?>
 
 						<h2 class="m-0 label-set">Current Status</h2>
@@ -671,6 +676,7 @@
 							<div class="col-sm-2"><p>Forecast:</p></div>
 						</div>
 						<?php
+							if (!function_exists ('mkeydate')) {
 							function mkeydate($mfield) {
 								//GET ALL KEY DATES
 								$mobject = get_field_object($mfield);
@@ -680,6 +686,7 @@
 								echo $formatdate;
 								unset($mobject,$mvalue,$formatdate);
 							}
+						}
 						?>
 						<div class="row m-0  border-top border-bottom border-right">
 							<div class="col-8 text-left"><p>Discovery</p></div>
@@ -966,5 +973,6 @@
 			return $out;
 		}
 	}
+
 
 

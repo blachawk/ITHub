@@ -59,6 +59,9 @@ require_once( MY_PLUGIN_PATH .'/inc/assist_attachments.php' );
 //MANAGE ALL ACF OBJECTS USED
 require_once( MY_PLUGIN_PATH .'/inc/assist_acf.php' );
 
+//MANAGE EXCERPT
+require_once( MY_PLUGIN_PATH .'/inc/assist_excerpt.php' );
+
 //MANAGE SEARCH AND SEARCH HELPER NEEDS
 require_once( MY_PLUGIN_PATH .'/inc/assist_search.php' );
 
