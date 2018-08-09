@@ -319,7 +319,7 @@
 
 				if ($tabindex == 1) {
 				//EXCLUDE FIRST KEY FROM THE AFC ARRAY..WE DON'T NEED IT.
-				echo "<div class='row border'>";
+				echo "<div class='row'>";
 					$columns = 3;
 					foreach(range(1,$columns) as $index) {
 					echo "<div class='col-6 p-3'>";
@@ -924,30 +924,32 @@
 				$out.="</div>";
 
 			else :
-			$out.= 'no IT personnel found';
+			$out.= '';
 			endif;
 
-			//PROJECT MANAGERS
-			if( have_rows('project_manager_details') ):
+			//PRODUCT OWNERS
+			if( have_rows('product_owner_details') ):
+
+				$mpotitle = get_field("product_owners_title_bar");
 
 				$out.="<div class='row text-center'>";
 				$out.="<div class='col-sm-12'>";
 				$out.="<ul class='list-group'>";
-				$out.="<li class='list-group-item list-group-item-info p-0 my-4'><h2 class='text-center py-1 m-0'>Project Managers</h2></li>";
+				$out.="<li class='list-group-item list-group-item-info p-0 my-4'><h2 class='text-center py-1 m-0'>{$mpotitle}</h2></li>";
 				$out.="</ul>";
 				$out.="</div>";
 
 				// loop through the rows of data
-				while ( have_rows('project_manager_details') ) : the_row();
+				while ( have_rows('product_owner_details') ) : the_row();
 
 				// display a sub field value
 				$out.= "<div class='col-sm-3 py-2'>";
-				$out.= "<h4>".get_sub_field('pm_name')."</h4>";
-				$out.= "<p>".get_sub_field('pm_email')."</p>";
-				$out.= "<p>".get_sub_field('pm_phone_number')."</p>";
+				$out.= "<h4>".get_sub_field('po_name')."</h4>";
+				$out.= "<p>".get_sub_field('po_email_addy')."</p>";
+				$out.= "<p>".get_sub_field('po_phone_number')."</p>";
 
-				if(get_sub_field('pm_owner_of')):
-				$out.= "<div class='py-2'><p>Projects Owned:</p><b>".get_sub_field('pm_owner_of')."</b></div>";
+				if(get_sub_field('po_owner_of')):
+				$out.= "<div class='py-2'><p>Projects Owned:</p><b>".get_sub_field('po_owner_of')."</b></div>";
 				endif;
 				
 				$out.=  "</div>";
@@ -957,13 +959,12 @@
 				$out.="</div>";
 
 			else :
-			$out.= 'no IT personnel found';
+			$out.= '';
 			
 			endif;
 
 			return $out;
 		}
 	}
-
 
 
