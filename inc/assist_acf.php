@@ -800,9 +800,9 @@
 		//BUILD THE LOOP AND LOAD THE POSTS
 		function ithub_exec_summary_landing_loop() {
 
-				//GET ALL PRODUCT OWNERS VIA ACF KEY VALUE
+				//NFFA - GET ALL PRODUCT OWNERS VIA ACF KEY VALUE | NEED TO CHANGE IN EVERY SERVER LOCATION
 				function mowners() {
-					$field_key = "field_5b5b34f4ed085";
+					$field_key = "field_5b5b34f4ed085"; //uidev: field_5b5b34f4ed085 | ithub:field_5b648d8589d37
 					$field = get_field_object($field_key);
 						
 					$mowners['relation'] = 'OR';

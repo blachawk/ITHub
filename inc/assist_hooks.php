@@ -91,3 +91,30 @@ function author_in_publish() {
     post_author_meta_box( $post );
     echo '</div>';
 }
+
+
+/**
+ * NFFA - CREATE SHORTCODES FOR EDITORS 
+ *  attributes | href, text, brand=h1:h2:h3:h4  
+  * [link href="" text="" brand=""] 
+ */
+add_shortcode('link','nffa_external_links');
+function nffa_external_links($atts, $content = null) {
+	
+	//set attributes here!
+	extract (shortcode_atts(array(
+		'href' => '',
+		'text' => '',
+		'brand'=> 'h3'
+	),$atts));
+
+	//base link
+	$mbase = '<'.$brand.'><a href="'.$href.'">'.$text.'</a> <i class="fas fa-external-link-alt"></i></'.$brand.'>';
+
+	//set return conditions here!
+	if ($text == '') {
+		return '<'.$brand.'><a href="'.$href.'">Link[...]</a> <i class="fas fa-external-link-alt"></i></'.$brand.'>';
+	} else  {
+		return $mbase;
+	}
+}
