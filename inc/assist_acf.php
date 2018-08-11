@@ -681,9 +681,14 @@
 								//GET ALL KEY DATES
 								$mobject = get_field_object($mfield);
 								$mvalue = get_field($mfield);
-								$formatdate = strtotime($mvalue);
-								$formatdate =  date("m-d", $formatdate);
-								echo $formatdate;
+								
+								if (empty($mvalue)) {
+									echo "";
+								} else {
+									$formatdate = strtotime($mvalue);
+									$formatdate =  date("m-d", $formatdate);
+									echo $formatdate;
+								}
 								unset($mobject,$mvalue,$formatdate);
 							}
 						}
