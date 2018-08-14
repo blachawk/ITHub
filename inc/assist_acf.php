@@ -447,29 +447,51 @@
 				$out .= "<ul id='mTabs' class='nav nav-tabs my-5' role='tablist'>";
 				$tabindex = 1;
 				foreach($field_group as $mfname => &$mfvalue) { 
-					if($mfvalue['label'] == "Title") {
-					$out .= "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['value']."</a></li>";       
-					$tabindex++;
-					}
+						
+						$out .= "<li class='nav-item'><a id='tab{$tabindex}' class='nav-link ".(($tabindex==1)?'active':"")."' role='tab' href='#tab{$tabindex}content' data-toggle='tab' aria-controls='tab{$tabindex}content' aria-selected='true'>".$mfvalue['label']."</a></li>";
+					$tabindex++;					
 				}
 				$out .= "</ul>";
 				unset($mfvalue);
+				
+				//CREATE A WRAPPER FUNCTION FOR REPEATER CONTENT
+				if (!function_exists ('mKBAContent')) {
+				 	function mKBAContent($title,$link,$description) {
+
+						$mout = '';
+						$mtitle = get_sub_field($title);
+						$mlink =  get_sub_field($link);
+						if ($mlink != null):
+							$mout.= "<h3><a href='{$mlink}'>{$mtitle}</a> <i class='fas fa-external-link-alt'></i></h3>";
+						endif;
+						
+						$mdescription = get_sub_field($description);
+						$mout.= $mdescription;
+				 		return $mout;
+				 	}
+				 }
 
 				//CONSTRUCT THE BS4 LAYOUT TAB CONTENT SECTIONS
 				$out .= "<div id='mTabContent' class='tab-content'>";
-				$tabcontentindex = 1;
-				foreach($field_group as $mfname => &$mfvalue) { 
-						if($mfvalue['label'] == "Content") {
-							$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>{$mfvalue['value']}</div>";
-							$tabcontentindex++;
-						}
+
+				//OUTPUT REPEATER CONTENT FOR EACH TAB
+				$tabsections = 2;
+				foreach(range(1,$tabsections) as $index) {
+					if( have_rows('kba_tab01_repeater_content') ):
+						$out.= "<div id='tab{$index}content' class='tab-pane fade ".(($index == 1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$index}'>";
+							while ( have_rows('kba_tab0'.$index.'_repeater_content') ) : the_row();
+								$out.= mKBAContent('kba_tab0'.$index.'_title','kba_tab0'.$index.'_link','kba_tab0'.$index.'_description');
+							endwhile;	
+						$out.= "</div>";
+					else :
+						$out.= '';
+					endif;
 				}
 				$out .= "</div>";
-				unset($mfvalue);
-				/*highlight_string("<?php\n\$field_group =\n" . var_export($field_group, true) . ";\n?>");*/  
 
-			endif;//END BS4 LAYOUT
-
+				unset($index);
+				/* highlight_string("<?php\n\$field_group =\n" . var_export($field_group, true) . ";\n?>");*/
+			endif;//END FIELD GROUP CHECK
 			//RETURN OUTPUT
 			return $out;
 		}
@@ -488,10 +510,8 @@
 		//BUILD THE ACF LOGIC
 		function ithub_exec_summary_acf() {
 
-		
 		$post_id = get_the_ID();
 		$field_group = get_field_objects($post_id); //this gets the ACF fields associated to the given post!
-
 		
 			if($field_group): 
 			?>
