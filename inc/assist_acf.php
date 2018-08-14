@@ -649,6 +649,7 @@
 						</div>
 
 					</div>
+
 					<div class="col-lg-6 p-0">
 						<?php
 							//GET THE EXECUTIVE STATUS SUMMARY
@@ -667,88 +668,63 @@
 				</div>
 
 				<div class="row bg-white content-set border-right border-left border-bottom border-top">
+
 					<div class="col-lg-6 p-0">
 						<h2 class="m-0 label-set">Key Milestones / Deliverables</h2>
 
-						<div class="row m-0">
+						<div class="row m-0 border-bottom">
 							<div class="col-8 text-left"><p>Project Milestone</p></div>
 							<div class="col-sm-2"><p>Planned:</p></div>
 							<div class="col-sm-2"><p>Forecast:</p></div>
 						</div>
 						<?php
-							if (!function_exists ('mkeydate')) {
-							function mkeydate($mfield) {
-								//GET ALL KEY DATES
-								$mobject = get_field_object($mfield);
-								$mvalue = get_field($mfield);
-								
-								if (empty($mvalue)) {
-									echo "";
-								} else {
-									$formatdate = strtotime($mvalue);
-									$formatdate =  date("m-d", $formatdate);
-									echo $formatdate;
+
+							//a repeater function for each key milestone line item
+							if (!function_exists ('mKeyMilestones')) {
+								function mKeyMilestones($desc,$pfrom,$pto,$ffrom,$fto) {
+
+									$mdesc =  get_sub_field($desc);
+									$mpfrom = get_sub_field($pfrom);
+									$mpto = get_sub_field($pto);
+									$mffrom = get_sub_field($ffrom);
+									$mfto = get_sub_field($fto);
+
+									$out = '';
+									$out.="<div class='row m-0 border-bottom border-right'>";
+										$out.="<div class='col-8 text-left'><p>{$mdesc}</p></div>";
+										$out.="<div class='col-1 border-left border-right px-0 mx-0'>{$mpfrom}</div>";
+										$out.="<div class='col-1 border-right px-0 mx-0'>{$mpto}</div>";
+										$out.="<div class='col-1 border-right px-0 mx-0'>{$mffrom}</div>";
+										$out.="<div class='col-1 px-0 mx-0'>{$mfto}</div>";
+									$out.="</div>";
+									echo $out;
 								}
-								unset($mobject,$mvalue,$formatdate);
 							}
-						}
-						?>
-						<div class="row m-0  border-top border-bottom border-right">
-							<div class="col-8 text-left"><p>Discovery</p></div>
-							<div class="col-1 border-left border-right px-0 mx-0"><?=mkeydate("discovery_planned_from");?></div>
-							<div class="col-1 border-right px-0 mx-0"><?=mkeydate("discovery_planned_to");?></div>
-							<div class="col-1 border-right px-0 mx-0"><?=mkeydate("discovery_forecast_from");?></div>
-							<div class="col-1 px-0 mx-0"><?=mkeydate("discovery_forecast_to");?></div>
-						</div>
 
-						<div class="row m-0 border-bottom border-right">
-							<div class="col-8 text-left"><p>Planning</p></div>
-							<div class="col-1 border-left border-right px-0 mx-0"><?=mkeydate("planning_planned_from");?></div>
-							<div class="col-1 border-right px-0 mx-0"><?=mkeydate("planning_planned_to");?></div>
-							<div class="col-1 border-right px-0 mx-0"><?=mkeydate("planning_forecast_from");?></div>
-							<div class="col-1 px-0 mx-0"><?=mkeydate("planning_forecast_to");?></div>
-						</div>
-
-						<div class="row m-0 border-bottom border-right">
-							<div class="col-8 text-left"><p>Development</p></p></div>
-							<div class="col-1 border-left border-right px-0 mx-0"><?=mkeydate("development_planned_from");?></div>
-							<div class="col-1 border-right px-0 mx-0"><?=mkeydate("development_planned_to");?></div>
-							<div class="col-1 border-right px-0 mx-0"><?=mkeydate("development_forecast_from");?></div>
-							<div class="col-1 px-0 mx-0"><?=mkeydate("development_forecast_to");?></div>
-						</div>
-
-						<div class="row m-0 border-bottom border-right">
-							<div class="col-8 text-left"><p>Testing</p></div>
-							<div class="col-1 border-left border-right px-0 mx-0"><?=mkeydate("development_testing_from");?></div>
-							<div class="col-1 border-right px-0 mx-0"><?=mkeydate("development_testing_to");?></div>
-							<div class="col-1 border-right px-0 mx-0"><?=mkeydate("development_forecast_from");?></div>
-							<div class="col-1 px-0 mx-0"><?=mkeydate("development_forecast_to");?></div>
-						</div>
-
-						<div class="row m-0 border-bottom border-right">
-							<div class="col-8 text-left"><p>Execution (Go-Live!)</p></div>
-							<div class="col-1 border-left border-right px-0 mx-0"><?=mkeydate("execution_planned_date");?></div>
-							<div class="col-1 border-right px-0 mx-0"></div>
-							<div class="col-1 border-right px-0 mx-0"></div>
-							<div class="col-1 px-0 mx-0"></div>
-						</div>
-
-						<div class="row m-0 border-bottom border-right">
-							<div class="col-8 text-left"><p>Due Date</p></div>
-							<div class="col-1 border-left border-right px-0 mx-0"><?=mkeydate("due_date");?></div>
-							<div class="col-1 border-right px-0 mx-0"></div>
-							<div class="col-1 border-right px-0 mx-0"></div>
-							<div class="col-1 px-0 mx-0"></div>
-						</div>
-
-						<h2 class="m-0 label-set">Financials</h2>
-						<div class="row ml-auto py-3 text-center">
-							<div class="col">
-								<p>Development Time</p>
+							//KEY MILESTONE DELIVERABLES
+							if( have_rows('key_milestones_deliverables_repeater') ):
+								// loop through the rows of data
+								while ( have_rows('key_milestones_deliverables_repeater') ) : the_row();
+								mKeyMilestones('kmd_description','kmd_planned_from','kmd_planned_to','kmd_forecast_from','kmd_forecast_to');
+								endwhile;
+							else :
+								$out.= 'No Key Milestones have been set';
+							endif;
+							?>
+						
+							<h2 class="m-0 label-set">Financials</h2>
+							<div class="row ml-auto py-3 text-center">
+								<div class="col">
+									<?php 
+										//FINANCIALS
+										$mfinancials =  get_field('financials');
+										echo "<p>{$mfinancials}</p>";
+									?>
+								</div>
 							</div>
-						</div>
 
 					</div>
+
 					<div class="col-lg-3 p-0">
 
 						<?php
@@ -765,6 +741,7 @@
 							</div>
 						</div> 
 					</div>
+
 					<div class="col-lg-3 p-0">
 
 						<?php
@@ -775,11 +752,12 @@
 						?>
 						<h2 class="m-0 label-set"><?php echo $mlabel ?></h2>
 						<div class="row p-3 content-set">
-								<div class="col text-left">
-										<?php echo $mvalue ?>
-								</div>
-							</div> 
+							<div class="col text-left">
+								<?php echo $mvalue ?>
+							</div>
+						</div> 
 					</div>
+
 				</div>
 			</div>
 
@@ -811,7 +789,7 @@
 					$field_key = '';
 					$minstance = MY_INSTANCE;
 					if($minstance == "ITHUBLOCAL") {
-						$field_key = "field_5b5b34f4ed085"; //local
+						$field_key = "field_5b648d8589d37"; //local
 					} else {
 						$field_key = "field_5b648d8589d37"; //live
 					}
@@ -852,8 +830,6 @@
 					$out.="<th scope='col'>Projects</th>";
 					$out.="<th scope='col'>Product Owner</th>";
 					$out.="<th scope='col'>Lead Developer</th>";
-					$out.="<th scope='col'>Start Date</th>";
-					$out.="<th scope='col'>End Date</th>";
 					$out.="</tr>";
 					$out.="</thead>";
 					$out.="<tbody>";
@@ -887,16 +863,7 @@
 							foreach($mvalue as $mname){
 							$out.="<span class='d-block'>".$mname."</span>";
 							}
-						}
-						$out.= "</td>";
-						$out.="<td>";
-						foreach($mstartdate as $mkey => $mvalue) {
-							$out.="<span class='d-block'>".$mvalue."</span>";
-						}
-						$out.= "</td>";
-						$out.="<td>";
-						foreach($mduedate as $mkey => $mvalue) {
-							$out.="<span class='d-block'>".$mvalue."</span>";
+						    //endforeach;
 						}
 						$out.= "</td>";
 						$out.="</tr>";		
