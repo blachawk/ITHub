@@ -540,10 +540,11 @@
 						$mPreviewRevisions = get_posts($args);
 						//REFERENCE LOOP FOR PREVIEWING REVISIONS
 						if ($mPreviewRevisions) {
+
 							echo "<div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>";
 							foreach ($mPreviewRevisions as $post):
 								setup_postdata($post);
-								$currentTitle =  get_the_title();		
+								$currentTitle = get_the_title();	
 								if ($currentTitle == $post->post_title):
 								$publisheddate = get_the_time('Y-m-d', $post->ID);
 								$formateddate =  date("l F jS, Y",  strtotime($publisheddate));
