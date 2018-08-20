@@ -804,6 +804,8 @@
 		//BUILD THE LOOP AND LOAD THE POSTS
 		function ithub_exec_summary_landing_loop() {
 
+              
+
 				//NFFA - GET ALL PRODUCT OWNERS VIA ACF KEY VALUE | NEED TO CHANGE IN EVERY SERVER LOCATION
 				function mowners() {
 
@@ -842,9 +844,21 @@
 				//IF ANY POSTS MEET THE ARGUMENT CRITERIA...
 				if ($mExecSumPosts) {
 
-					//...OUTPUT THE DATA AND LIST RESULTS!
+					//CREATE OUTPUT VAR
 					$out = '';
-					$out.="<table class='table'>";
+
+					//...ADD A CUSTOM INPUT FIELD WITH BS4 CLASSES, THAT WE WILL THEN USE TO FILTER CONTENT VIA JQUERY
+					//https://www.w3schools.com/bootstrap4/bootstrap_filters.asp
+					$out.="<div class='form-group'>";
+					$out.="<label for='filterProjects'>Filter Projects</label>";
+					$out.="<input class='form-control' id='filterProjects' type='text' placeholder='Search..'>";
+					$out.="</div>";
+
+
+
+					//...OUTPUT THE DATA AND LIST RESULTS!
+					
+					$out.="<table class='table' id='listedProjects'>";
 					$out.="<thead class='thead-light'>";
 					$out.="<tr>";
 					$out.="<th scope='col'>Week</th>";

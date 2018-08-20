@@ -45,45 +45,61 @@
 
     function carousel() {
         $('.carousel').carousel({
-            interval:false //SET THIS VALUE TO 7000 WHEN WE HAVE SLIDES
-          });
+            interval: false //SET THIS VALUE TO 7000 WHEN WE HAVE SLIDES
+        });
     }
 
     function searchhelper() {
 
-      //  $("#mSearchList").addClass("d-none");
+        //  $("#mSearchList").addClass("d-none");
 
         //FILTER BS4 LIST ITEMS BASED ON INPUT CHARACTERS
-        $('#s').on('input',function(e){
+        $('#s').on('input', function (e) {
             let input = $(this).val()
             let filter = input.toUpperCase()
-                    
-            if( input.length === 0 ) {
-               $("#mSearchList").addClass("ithub-initial-hide");//d-none
+
+            if (input.length === 0) {
+                $("#mSearchList").addClass("ithub-initial-hide");//d-none
             } else {
                 $("#mSearchList").removeClass("ithub-initial-hide");//d-none
             }
 
-            $('.list-group .list-group-item').each(function() {
-              let li = $(this)
-              let anchor = li.children('a')
-              // Filter by text
-              // if(anchor.text().toUpperCase().indexOf(filter) > -1) {
-              // Filter by meta
-              if(anchor.data('meta').toUpperCase().indexOf(filter) > -1) {
-                //WE HAVE A MATCH, SO LETS FADE THESE IN FROM 0 OPACITY TO 100%
-                li.removeClass('d-none').addClass('ithub-fadeIn');//d-none
-               // li.find('a').addClass('visible');
-              } else {
-                //WE DON'T HAVE A MATCH SO SET OPACITY TO 0 ON THESE LI ITEMS RIGHT AWAY
-                li.addClass('d-none').removeClass('ithub-fadeIn');//d-none
-                //li.find('a').removeClass('invisible').addClass('visible');
-              }
+            $('.list-group .list-group-item').each(function () {
+                let li = $(this)
+                let anchor = li.children('a')
+                // Filter by text
+                // if(anchor.text().toUpperCase().indexOf(filter) > -1) {
+                // Filter by meta
+                if (anchor.data('meta').toUpperCase().indexOf(filter) > -1) {
+                    //WE HAVE A MATCH, SO LETS FADE THESE IN FROM 0 OPACITY TO 100%
+                    li.removeClass('d-none').addClass('ithub-fadeIn');//d-none
+                    // li.find('a').addClass('visible');
+                } else {
+                    //WE DON'T HAVE A MATCH SO SET OPACITY TO 0 ON THESE LI ITEMS RIGHT AWAY
+                    li.addClass('d-none').removeClass('ithub-fadeIn');//d-none
+                    //li.find('a').removeClass('invisible').addClass('visible');
+                }
             });
         });
     }
 
+
+    function filterProjects() {
+        /* FILTER PROJECTS ON THE EXECUTIVE SUMMARY LANDING PAGE VIA BS4 AND JQUERY*/
+        var mtarget = $("#filterProjects");
+        if (mtarget.length){
+            mtarget.on("keyup", function () {
+                console.log('key action going on');
+                var value = $(this).val().toLowerCase();
+                $("#listedProjects tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        }
+    }
+
     //RUN SCRIPTS
+    filterProjects();
     scrollbackup();
     gaTrackClicks();
     carousel();
