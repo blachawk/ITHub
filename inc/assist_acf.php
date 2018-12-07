@@ -189,32 +189,6 @@
 				$out .= "</ul>";
 				unset($mfvalue);
 
-				//CONSTRUCT THE BS4 LAYOUT TAB CONTENT SECTIONS
-				// $out .= "<div id='mTabContent' class='tab-content'>";
-				// $tabcontentindex = 1;
-				// foreach($field_group as $mfname => &$mfvalue) { 
-				// 		if($mfvalue['label'] == "Wrike Iframe") {
-				// 			$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>
-							
-				// 			<div class='embed-responsive embed-responsive-16by9'>
-				// 			   {$mfvalue['value']}
-				// 			</div>
-							
-				// 			</div>";
-				// 			$tabcontentindex++;
-				// 		}
-				// }
-				// $out .= "</div>";
-				// unset($mfvalue);
-
-
-			    //RETURN OUTPUT
-				// return $out;
-
-
-
-
-
 				//CREATE A WRAPPER FUNCTION FOR REPEATER CONTENT
 				if (!function_exists ('mESContent')) {
 					function mESContent($title,$link,$description) {
@@ -258,43 +232,9 @@
 			unset($index);
 			/*highlight_string("<?php\n\$field_group =\n" . var_export($field_group, true) . ";\n?>");*/
 			endif;//END FIELD GROUP CHECK
+
 			//RETURN OUTPUT
 			return $out;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			//endif;//END BS4 LAYOUT
 		}
 	}
 
