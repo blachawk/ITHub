@@ -61,9 +61,9 @@
 				<?php
 				//LOAD EACH ACF FIELD FOR CALL-TO-ACTION SECTIONS 
 				echo "<div class='container ithub-main'>";
-				echo "<div class='row'>";
-				echo "<div class='col-12 my-3'>";
-				echo "<h3>".get_field('home_favicon_section_header')."</h3>";
+				echo "<div class='row justify-content-center ml-auto'>";
+				echo "<div class='col-12 my-3 text-center'>";
+				echo get_field('home_favicon_section_header');
 				echo "</div>";
 
 				$mcount = 1;
@@ -71,7 +71,7 @@
 					//ONLY GET CALL-TO-ACTION FIELDS 
 					if ( (strpos($mfvalue['label'], 'Section Header') === false) && (strpos($mfvalue['label'], 'Section') !== false)  ) {
 						//GROUP EVERY 2 ARRAY VALUES IN BS4 DIV COLUMNS
-						if ($mcount%2 == 1){echo "<div class='col-md-3 my-3 px-5'>";}
+						if ($mcount%2 == 1){echo "<div class='col-md-3 my-3 px-5 text-center'>";}
 						echo $mfvalue['value'];                   
 						if ($mcount%2 == 0){echo "</div>";}
 					$mcount++;
@@ -117,7 +117,7 @@
 				$out = '';
 
 				//CONSTRUCT THE BS4 LAYOUT TABS
-				$out .= "<ul id='mTabs' class='nav nav-tabs my-4' role='tablist'>";
+				$out .= "<ul id='mTabs' class='nav nav-tabs my-4 d-none' role='tablist'>";
 				$tabindex = 1;
 
 				foreach($field_group as $mfname => &$mfvalue) { 
@@ -131,7 +131,7 @@
 
 
 			//CONSTRUCT THE BS4 LAYOUT TAB CONTENT SECTIONS
-			$out .= "<div id='mTabContent' class='tab-content'>";
+			$out .= "<div id='mTabContent' class='tab-content d-none'>";
 			$tabcontentindex = 1;
 			foreach($field_group as $mfname => &$mfvalue) { 
 					if($mfvalue['label'] == "Content") {
@@ -190,22 +190,111 @@
 				unset($mfvalue);
 
 				//CONSTRUCT THE BS4 LAYOUT TAB CONTENT SECTIONS
-				$out .= "<div id='mTabContent' class='tab-content'>";
-				$tabcontentindex = 1;
-				foreach($field_group as $mfname => &$mfvalue) { 
-						if($mfvalue['label'] == "Wrike Iframe") {
-							$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'><div class='embed-responsive embed-responsive-16by9'>{$mfvalue['value']}</div></div>";
-							$tabcontentindex++;
-						}
+				// $out .= "<div id='mTabContent' class='tab-content'>";
+				// $tabcontentindex = 1;
+				// foreach($field_group as $mfname => &$mfvalue) { 
+				// 		if($mfvalue['label'] == "Wrike Iframe") {
+				// 			$out .= "<div id='tab{$tabcontentindex}content' class='tab-pane fade ".(($tabcontentindex==1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$tabcontentindex}'>
+							
+				// 			<div class='embed-responsive embed-responsive-16by9'>
+				// 			   {$mfvalue['value']}
+				// 			</div>
+							
+				// 			</div>";
+				// 			$tabcontentindex++;
+				// 		}
+				// }
+				// $out .= "</div>";
+				// unset($mfvalue);
+
+
+			    //RETURN OUTPUT
+				// return $out;
+
+
+
+
+
+				//CREATE A WRAPPER FUNCTION FOR REPEATER CONTENT
+				if (!function_exists ('mESContent')) {
+					function mESContent($title,$link,$description) {
+
+					$mout = '';
+					$mtitle = get_sub_field($title);
+					$mlink =  get_sub_field($link);
+					$mout.= "<div class='ffa-repeater-group mt-3 d-flex flex-row'>";
+					if ($mlink != null):
+						$mout.= "<h3 class='mr-3'><a class='ext' href='{$mlink}'>{$mtitle} <i class='fas fa-external-link-alt'></i></a></h3>";
+					endif;
+					
+					$mdescription = get_sub_field($description);
+					if (get_sub_field($description)) {
+						$mout.= $mdescription;
+					}
+					$mout .= "</div>";
+						return $mout;
+					}
 				}
-				$out .= "</div>";
-				unset($mfvalue);
-				/*highlight_string("<?php\n\$field_group =\n" . var_export($field_group, true) . ";\n?>");*/
 
-				//RETURN OUTPUT
-				return $out;
+			//CONSTRUCT THE BS4 LAYOUT TAB CONTENT SECTIONS
+			$out .= "<div id='mTabContent' class='tab-content'>";
 
-			endif;//END BS4 LAYOUT
+			//OUTPUT REPEATER CONTENT FOR EACH TAB
+			$tabsections = 2;
+			foreach(range(1,$tabsections) as $index) {
+				if( have_rows('exec_summary_tab01_repeater_content') ):
+					$out.= "<div id='tab{$index}content' class='tab-pane fade ".(($index == 1)?'active show':"")."' role='tabpanel' aria-labelledby='tab{$index}'>";
+						while ( have_rows('exec_summary_tab0'.$index.'_repeater_content') ) : the_row();
+							$out.= mESContent('exec_tab0'.$index.'_title','exec_tab0'.$index.'_link','exec_tab0'.$index.'_description');
+						endwhile;	
+					$out.= "</div>";
+				else :
+					$out.= '';
+				endif;
+			}
+			
+			$out .= "</div>";
+
+			unset($index);
+			/*highlight_string("<?php\n\$field_group =\n" . var_export($field_group, true) . ";\n?>");*/
+			endif;//END FIELD GROUP CHECK
+			//RETURN OUTPUT
+			return $out;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			//endif;//END BS4 LAYOUT
 		}
 	}
 
