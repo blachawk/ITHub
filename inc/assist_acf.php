@@ -1,6 +1,10 @@
 <?php	
 /**
+<<<<<<< HEAD
  * MANAGE ALL AFC OBJECT LOGIC FOR ANY GIVEN PAGE | MODIFIED 2018-12-11
+=======
+ * MANAGE ALL AFC OBJECT LOGIC FOR ANY GIVEN PAGE.
+>>>>>>> 5c74bbcde9837d8bf5e5682b6fae2692aabe0d4e
  */
 	//NFFA - TAP INTO WP HOOKS | ACF LOGIC FOR HOME
 	add_filter('the_content','ithub_home');
